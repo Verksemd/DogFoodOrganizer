@@ -26,5 +26,4 @@ class Calculator(
     // When it's better to order food so the dog doesn't starve without it
     val orderDate: LocalDate
         get() = endDate.minusDays(daysForDelivery.toLong())
-
 }

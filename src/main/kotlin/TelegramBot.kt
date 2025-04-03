@@ -6,33 +6,33 @@ import com.github.kotlintelegrambot.entities.ChatId
 
 
 class TelegramBot(
-    private val notifier: Notifier<String>,
-    private val chatId: Long,
+    private val notifier: Notifier,
     private var token: String
 ) {
-    private val bot: Bot = bot {
+    val bot: Bot = bot {
         token = this@TelegramBot.token
-    val output = TelegramBotOutput()
         dispatch {
+
             command("start") {
-                send("Привет! Я бот-кормилец 🐶. Доступные команды:\n" +
-                        "/checkenddate — когда закончится корм\n")
+                val chatId = message.chat.id
+                send(chatId, "Привет! Я бот-кормилец 🐶. Доступные команды:\n" +
+                        "/checkenddate — когда закончится корм\n" +
+                "/checktoday - есть ли у собаки корм на сегодня")
             }
 
             command("checkenddate") {
-                val message = notifier.informAboutFinishDate(chatId)
-                send(message)
-
+                val chatId = message.chat.id
+                notifier.informAboutFinishDate(chatId)
             }
 
-//            command("checkToday") {
-//                val message = notifier.checkAndNotify()
-//                send(message.toString())
-//            }
+            command("checktoday") {
+                val chatId = message.chat.id
+                notifier.checkToday(chatId)
+          }
         }
     }
 
-    private fun send(text: String) {
+    fun send(chatId: Long, text: String) {
         bot.sendMessage(chatId = ChatId.fromId(chatId), text = text)
     }
 

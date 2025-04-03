@@ -1,3 +1,3 @@
-interface Output<T> {
-    fun send(recipient: Any, message: String): T
+interface Output {
+    fun send(recipient: Long, message: String)
 }
