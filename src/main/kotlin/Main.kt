@@ -1,3 +1,6 @@
+import command.CheckEndDate
+import command.CheckToday
+import command.Start
 import io.github.cdimascio.dotenv.dotenv
 import org.example.Calculator
 import java.time.LocalDate
@@ -19,8 +22,11 @@ fun main() {
 
     // Telegram
     val telegramBot = TelegramBot(notifier, token)
+    telegramBot.addHandler("start", handler = Start(sender))
+    telegramBot.addHandler("checkenddate", handler = CheckEndDate(notifier))
+    telegramBot.addHandler("checktoday", handler = CheckToday(notifier))
 
-    tgSender.init(telegramBot);
+    tgSender.init(telegramBot)
 
     telegramBot.start()
 }
