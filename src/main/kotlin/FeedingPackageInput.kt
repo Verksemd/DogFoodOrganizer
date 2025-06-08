@@ -1,11 +1,15 @@
+import kotlinx.serialization.Serializable
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
+@Serializable
 data class FeedingPackageInput(
     val packageWeightKg: Double,
     val numberOfFeedingsPerDay: Int,
     val gramsPerCup: Double,
-    val startDate: LocalDate
+//    val startDate: LocalDate
+    val startDate: String
 )
 fun readDouble(prompt: String): Double {
     while(true) {
@@ -28,13 +32,25 @@ fun readInt(prompt: String): Int {
 }
 
 fun readDate(prompt: String): LocalDate {
+    val formatters = listOf(
+        DateTimeFormatter.ISO_LOCAL_DATE,
+        DateTimeFormatter.ofPattern("dd.MM.yyyy"),
+        DateTimeFormatter.ofPattern("MM-dd-yyyy"),                  // 01-01-2025 (в US-стиле)
+        DateTimeFormatter.ofPattern("dd/MM/yyyy"),                  // 01/01/2025
+        DateTimeFormatter.ofPattern("MM/dd/yyyy")
+    )
     while (true) {
         print(prompt)
         val input = readln()
-        try {
-            return LocalDate.parse(input)
-        } catch (e: DateTimeParseException) {
-            println("Invalid date format. Use yyyy-MM-dd.")
+        for (formatter in formatters) {
+            try {
+                return LocalDate.parse(input, formatter)
+            } catch (e: DateTimeParseException) {
+                continue
+            }
         }
+        println("Invalid date format. Try something like 2025-01-01 or 01-01-2025")
+
     }
+
 }
