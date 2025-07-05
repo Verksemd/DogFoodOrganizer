@@ -80,6 +80,7 @@ fun main() {
         println("- Feedings/day: ${savedInput.numberOfFeedingsPerDay}")
         println("- Grams per cup: ${savedInput.gramsPerCup}")
         println("- Start date: ${savedInput.startDate}")
+        calculateAndNotify(savedInput, sender)
 
         if (askYesNo("Is this still your current package information?")) {
             println("There is nothing else do to here")
