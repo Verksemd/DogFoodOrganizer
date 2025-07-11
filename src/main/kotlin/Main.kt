@@ -2,14 +2,15 @@ import kotlinx.serialization.json.Json
 import org.example.Calculator
 import java.io.File
 import java.time.LocalDate
+//TODO() make file creation in resources
 
 fun askYesNo(prompt: String): Boolean {
     while (true) {
         print("$prompt (yes/no): ")
         when (readln().trim().lowercase()) {
             "yes", "y" -> return true
-            "no", "n"  -> return false
-            else       -> println("Please enter yes or no.")
+            "no", "n" -> return false
+            else -> println("Please enter yes or no.")
         }
     }
 }
@@ -33,12 +34,7 @@ fun savePackageInfo(data: FeedingPackageInput, path: String = "saved_package.jso
 }
 
 fun calculateAndNotify(newInfo: FeedingPackageInput, sender: Output) {
-    val calculator = Calculator(
-        newInfo.gramsPerCup,
-        newInfo.numberOfFeedingsPerDay,
-        newInfo.packageWeightKg,
-        LocalDate.parse(newInfo.startDate)
-    )
+    val calculator = Calculator(newInfo)
     val notifier = Notifier(calculator, sender)
     notifier.informAboutFinishDate(1234)
 }
@@ -47,6 +43,10 @@ fun main() {
     println("🐶 Welcome to Dog Food Tracker!")
     val consoleSender = ConsoleOutput()
     val sender = OutputAggregator(listOf(consoleSender))
+    val mybot = MyBotDraft()
+    mybot.start()
+    return
+
     val savedFile = File("saved_package.json")
     val packageInfo: FeedingPackageInput = if (!savedFile.exists()) {
         println("Let's set up your dog's food package information.")
